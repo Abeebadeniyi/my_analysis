@@ -26,6 +26,7 @@ data %>% ggplot(aes(x = month_ordered, y = frequency)) +
 
 #statistical analysis: Corr plot==============================================
 
+# this code is not correct
 data %>% mutate(r = cor(frequency, month_numeric)) %>% 
   ggplot(aes(x = month_ordered, y = frequency)) +
   geom_point() +
@@ -34,6 +35,7 @@ data %>% mutate(r = cor(frequency, month_numeric)) %>%
   theme(axis.text.x = element_text(angle = 90))
 #===============================================================================
 
+# so i wrote this instead:
 corr_data <- data %>% 
   group_by(subject,group) %>% 
   mutate(r = cor(frequency, month_numeric)) %>% 
@@ -42,16 +44,19 @@ corr_data <- data %>%
 #==============================================================================
 options(digits = 4)
 corr_data %>% 
-  ggplot(aes(x = month_ordered, y = frequency)) +
-  geom_point() +
+  ggplot(aes(x = month_ordered, y = frequency, colour = factor(year))) +
+  geom_point(size = 2.5) +
   facet_grid(subject~group) +
   geom_text(aes(x = 5, y = 20, label= paste("r = ", round(r, 4))), col = "red")+
   xlab("Month")+
   ylab("Number of subject recruited")+
   ggtitle("Relationship between month and subject recruitment") +
-  theme_bw()+
+  theme_bw() +
+  labs(color = "Year")+
+  scale_color_manual(values= c("blue", "orange", "black"))+
   theme(axis.text.x = element_text(angle = 90),
-        plot.title = element_text(hjust=0.5))
+        plot.title = element_text(hjust=0.5))    
+
 #==============================================================================
 
 #========================Upsett Plot==============================================
@@ -64,15 +69,15 @@ glimpse(parasite_detection_case)
 parasite_detection_case
 
 input_1 <- c(C.parvum = 8,
-            C.belli = 5,
-            C.cayetanensis = 4,
-            A.lumbricoides = 0,
-            T.trichiura = 0,
-            "A.lumbricoides&T.trichiura" = 1,
-            "C.parvum&C.cayetanensis" = 2,
-            "C.parvum&C.belli" = 3,
-            "C.belli&C.cayetanensis" = 1,
-            "C.parvum&C.belli&C.cayetanensis" = 1)
+             C.belli = 5,
+             C.cayetanensis = 4,
+             A.lumbricoides = 0,
+             T.trichiura = 0,
+             "A.lumbricoides&T.trichiura" = 1,
+             "C.parvum&C.cayetanensis" = 2,
+             "C.parvum&C.belli" = 3,
+             "C.belli&C.cayetanensis" = 1,
+             "C.parvum&C.belli&C.cayetanensis" = 1)
 
 
 upset(fromExpression(input_1), 
@@ -82,8 +87,8 @@ upset(fromExpression(input_1),
       decreasing = T,
       mb.ratio = c(0.6, 0.4),
       number.angles = 0, 
-      text.scale = 2, 
-      point.size = 5.0, 
+      text.scale = 1.4, 
+      point.size = 3.0, 
       line.size = 1,
       mainbar.y.label = "Frequency",
       sets.x.label = "count")
@@ -99,17 +104,17 @@ parasite_detection_control
 input_2<- c(C.parvum = 15,
             S.stercoralis = 1,
             E.histolytica = 1,
-             C.belli = 7,
-             C.cayetanensis = 19,
-             A.lumbricoides = 0,
-             T.trichiura = 1,
+            C.belli = 7,
+            C.cayetanensis = 19,
+            A.lumbricoides = 0,
+            T.trichiura = 1,
             Entamoeba.coli = 0,
-             "A.lumbricoides&T.trichiura" = 1,
-             "C.parvum&C.cayetanensis" = 11,
-             "C.parvum&C.belli" = 3,
-             "C.belli&C.cayetanensis" = 3,
+            "A.lumbricoides&T.trichiura" = 1,
+            "C.parvum&C.cayetanensis" = 11,
+            "C.parvum&C.belli" = 3,
+            "C.belli&C.cayetanensis" = 3,
             "E.histolytica&Entamoeba.coli&C.cayetanensis" = 1,
-             "C.parvum&C.belli&C.cayetanensis" = 4)
+            "C.parvum&C.belli&C.cayetanensis" = 4)
 
 
 upset(fromExpression(input_2), 
@@ -119,8 +124,8 @@ upset(fromExpression(input_2),
       decreasing = T,
       mb.ratio = c(0.6, 0.4),
       number.angles = 0, 
-      text.scale = 2, 
-      point.size = 5.0, 
+      text.scale = 1.3, 
+      point.size = 3.0, 
       line.size = 1,
       mainbar.y.label = "Frequency",
       sets.x.label = "count")
@@ -154,8 +159,8 @@ upset(fromExpression(input_3),
       decreasing = T,
       mb.ratio = c(0.6, 0.4),
       number.angles = 0, 
-      text.scale = 2, 
-      point.size = 5.0, 
+      text.scale = 1.3, 
+      point.size = 3.0, 
       line.size = 1,
       mainbar.y.label = "Frequency",
       sets.x.label = "count")
@@ -189,8 +194,8 @@ upset(fromExpression(input_4),
       decreasing = T,
       mb.ratio = c(0.6, 0.4),
       number.angles = 0, 
-      text.scale = 2, 
-      point.size = 5.0, 
+      text.scale = 1.4, 
+      point.size = 3.0, 
       line.size = 1,
       mainbar.y.label = "Frequency",
       sets.x.label = "count")
@@ -233,8 +238,8 @@ upset(fromExpression(input_5),
       decreasing = T,
       mb.ratio = c(0.6, 0.4),
       number.angles = 0, 
-      text.scale = 2, 
-      point.size = 5.0, 
+      text.scale = 1.3, 
+      point.size = 3.0, 
       line.size = 1,
       mainbar.y.label = "Frequency",
       sets.x.label = "count")
@@ -273,8 +278,8 @@ input_6<- c(EAEC= 0,
             "C.belli&C.cayetanensis&EAEC" = 1,
             "C.cayetanensis&EAEC&EIEC"  = 1,
             "C.cayetanensis&EIEC&ETEC"  = 1,
-             "C.cayetanensis&EAEC&EPEC" = 1,
-             "E.histolytica&EAEC&ETEC"   = 1,
+            "C.cayetanensis&EAEC&EPEC" = 1,
+            "E.histolytica&EAEC&ETEC"   = 1,
             "C.parvum&C.belli&EAEC&EPEC"  = 1 )
 
 
@@ -285,8 +290,8 @@ upset(fromExpression(input_6),
       decreasing = T,
       mb.ratio = c(0.6, 0.4),
       number.angles = 0, 
-      text.scale = 2, 
-      point.size = 5.0, 
+      text.scale = 1.3, 
+      point.size = 3.0, 
       line.size = 1,
       mainbar.y.label = "Frequency",
       sets.x.label = "count")
@@ -295,3 +300,44 @@ upset(fromExpression(input_6),
 ##---------------------------------------------------------------------------
 
 
+##. This code was written to recalculate correlation 
+
+
+# Relationship between month and subject recruitment for adults
+data %>% filter(subject=="Adult") %>% 
+  group_by(group) %>% 
+  mutate(r = cor(frequency, month_numeric)) %>% 
+  ungroup() %>% 
+  ggplot(aes(x = month_ordered, y = frequency, colour = factor(year))) +
+  geom_point(size = 2.5) +
+  facet_grid(~group) +
+  geom_text(aes(x = 5, y = 20, label= paste("r = ", round(r, 4))), col = "red")+
+  xlab("Month")+
+  ylab("Number of subject recruited")+
+  ggtitle("Relationship between month and subject recruitment for Adults") +
+  theme_bw() +
+  labs(color = "Year")+
+  scale_color_manual(values= c("blue", "orange", "black"))+
+  theme(axis.text.x = element_text(angle = 90),
+        plot.title = element_text(hjust=0.5))  
+
+
+
+# Relationship between month and subject recruitment for children
+
+data %>% filter(subject=="Children") %>% 
+  group_by(group) %>% 
+  mutate(r = cor(frequency, month_numeric)) %>% 
+  ungroup() %>% 
+  ggplot(aes(x = month_ordered, y = frequency, colour = factor(year))) +
+  geom_point(size = 2.5) +
+  facet_grid(~group) +
+  geom_text(aes(x = 5, y = 20, label= paste("r = ", round(r, 4))), col = "red")+
+  xlab("Month")+
+  ylab("Number of subject recruited")+
+  ggtitle("Relationship between month and subject recruitment for Children") +
+  theme_bw() +
+  labs(color = "Year")+
+  scale_color_manual(values= c("blue", "orange", "black"))+
+  theme(axis.text.x = element_text(angle = 90),
+        plot.title = element_text(hjust=0.5))  
